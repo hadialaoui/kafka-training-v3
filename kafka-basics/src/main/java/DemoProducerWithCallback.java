@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-public class DemoProducer {
+public class DemoProducerWithCallback {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(DemoProducer.class.getSimpleName());
+    public static final Logger LOGGER = LoggerFactory.getLogger(DemoProducerWithCallback.class.getSimpleName());
 
     public static void main(String[] args) {
         LOGGER.info("Start Kafka producer");
@@ -23,7 +23,15 @@ public class DemoProducer {
         // Create producer Record
         var producerRecord = new ProducerRecord<String, String>("first-topic", "hello world from java producer");
         // Send data
-        producer.send(producerRecord);
+        producer.send(producerRecord, (metadata, e) -> {
+            if(e == null){
+                LOGGER.info("Receiving metadata \n Topic: {}\n Partition: {}\n Offset: {}\n Timestamp: {}",
+                        metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp());
+            } else {
+                LOGGER.error("Error while producing", e);
+            }
+
+        });
 
         // Flush and close producer
         producer.close();

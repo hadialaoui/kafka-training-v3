@@ -22,10 +22,10 @@ public class DemoProducerWithKeys {
         var producer = new KafkaProducer<String, String>(properties);
         // Create producer Records
         for (int j = 0 ; j < 2 ; j++) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 10; i < 14; i++) {
                 String topic = "java-topic";
                 String key = "id-" + i;
-                String message = "hello world from java producer (:"+j+"-"+i+")";
+                String message = "Hello ("+j+"-"+i+")";
                 var producerRecord = new ProducerRecord<>(topic, key, message);
                 // Send data
                 producer.send(producerRecord, (metadata, e) -> {
